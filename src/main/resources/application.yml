@@ -1,0 +1,70 @@
+server:
+  port: 9090
+spring:
+  application:
+    name: app-backend
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:db_dev}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:123456}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format: true
+    database: postgresql
+    database-platform: PostgreSQLDialect
+
+  #config mail sender
+  mail:
+    protocol: smtp
+    port: 587
+    host: smtp.gmail.com
+    username: ${MAIL_USERNAME:xxxx168@gmail.com}
+    password: ${MAIL_PASSWORD:xxxxxx}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+# The admin username and password are used to create the admin account when the application starts.
+admin:
+  username: ${ADMIN_USERNAME:admin@gmail.com}
+  password: ${ADMIN_PASSWORD:123456}
+
+
+jwt:
+  # different expiration time for each token
+  expiration:
+    access-token: 86400000          # 1 hour
+    refresh-token: 604800000       # 7 days
+    reset-password: 900000         # 15 minutes
+    enable-account: 900000
+
+  # The jwt secret key is used to sign the token.
+  secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+  
+  
+  
+# Take the span id and trace id from the Mapped Diagnostic Context (MDC) and
+# put them into the log message.
+logging:
+  file:
+    path: './logs/${spring.application.name}'
+    name: ${logging.file.path}.log
+  pattern:
+    console: "[%d] [%t] %-5level [${spring.application.name:},%X{traceId:-},%X{spanId:-}] %-32.32logger{36} - %msg%n"
+    file: "[%d] [%t] %-5level [${spring.application.name:},%X{traceId:-},%X{spanId:-}] %-32.32logger{36} - %msg%n"
+  logback:
+    rollingpolicy:
+      max-file-size: 20MB
+
+  
+  
